@@ -1,0 +1,97 @@
+<header id="overview" class="jumbotron subhead">
+    <div class="container">
+        <h1>Internals</h1>
+        <p class="lead">Technology behind Rootnode</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <div class="span9">
+
+        <section id="container">
+          <div class="page-header">
+            <h1>Container</h1>
+          </div>
+	<p class="lead">Rootnode is trying to merge the best parts of shared hosting and VPS. We are proud to introduce Linux containers or LXC as secure and stable platform, to fulfill your deepest desires.</p>
+
+	
+	<h4>Every user has a container</h4>
+	<p>Container is a lightweight virutal system mechanism sometimes described as <em>chroot on steroids</em>. Container gives an excellent user isolation and easy resource control.</p>
+	<p>From the user's perspective, every container works as a seperate operating system with its own memory, disk space and network stack, and it is fully separated from other containers. It is much more secure solution than shared hosting but it also introduces multiple limitations.</p>
+
+	<h4>Container is read-only</h4>
+	<p>Operating system in the container runs on read-only filesystem. Even after gaining root privileges, you will not be able to mess up too much. Naturally, user's home directory is writeable.</p>
+	<p>Such setting makes configuration a little bit more complicated comparing to Virtual Private Server or VPS because files are shared with template container. On the other hand, all changes are made in one place which is very convenient.</p>
+
+	<h4>No root privileges</h4>
+	<p>The one and only reason why you can't have root access is because it would be highly insecure. LXC is not prepared for such usage and it is prone to many vulnerabilities which could cause escaping the container and gaining full access to the host system.</p>
+
+	<h4>Shared configuration</h4>
+	<p>Many configuration files are shared <em>(symlink)</em> and stored in read-only directory <tt>/etc/shared</tt>. This directory belongs to the template container and, from time to time, it is updated. We do not recommend to replace any symlink linking to this directory with your own file. It can cause serious problems in your container even after small configuration changes made by us globally.</p>
+	<p>Please <a href="/contact">contact us</a> if you really need configuration change. We will add it globally.</p>
+	
+	<h4>No public IP address</h4>
+	<p>Sad, but true. As IPv4 pool is exhausted, we are not able to give away a public IP address to every container. 
+	
+	<h5>Network traffic</h5>
+	<p>Network traffic is limited to per-user ports and DNATed to particular container. Default firewall policy is <strong>DROP</strong>.</p>
+	<p>Web traffic is handled by reverse proxy on a per-vhost basis.</p>
+	<p><span class="label label-github">Github</span> <a href="https://github.com/rootnode/lxc/tree/master/ferm">Firewall configuration</a></p>
+	
+	<h5>User ports</h5>
+	<p>Every user has 10 predefined ports with prefix equals user's uid. Port numbers are from <code>$UID0</code> to <code>$UID9</code>. For user with uid <span class="change">1234</span> it would be from <span class="change">12340</span> to <span class="change">12349</span>.</p>
+	
+	<p>SSH and FTP services have <strong>reserved</strong> user ports. Port <code>$UID</code> for SSH connection and port <code>$UID0</code> for FTP connection.</p>
+	
+	<p>User ports summary.
+	<table class="table">
+		<tr><th>Port</th><th>Port for UID=1234</th><th>Description</th></tr>
+		<tr><td><code>$UID</code></td><td>1234</td><td>SSH connection</td></tr>
+		<tr><td><code>$UID0</code></td><td>12340</td><td>FTP connection</td></tr>
+		<tr><td><code>$UID0:$UID9</code></td><td>12341:12349</td><td>Any use</td></tr>
+	</table>
+	</p>
+
+	<h4>Strict memory limit</h4>
+	<p>Every container has a memory limit which can cause undesired behaviour. Default memory limit per container is <strong>128M</strong> or <strong>256M</strong> depending on user needs. If you need more, do not hesitate to ask for more giving us a good reason. Otherwise, optimize your container for memory usage.</p>
+
+	<p>When you exceeed memory limit, kernel kills random process. In the worst scenario, <tt>sshd</tt> daemon will be killed and you will not be able to log back into the container without admin help. We are working to fix the problem.</p>
+	<p><span class="label label-todo">Todo</span> OOM killer
+
+	<h4>Other limitations</h4>
+	<p>
+	<ul>
+		<li><code>chsh</code> command does not work. Default shell is <tt>bash</tt>.</li>
+		<li>No information about container's memory usage in <code>htop</code>. It shows overall memory usage of the server.</li>
+	</ul>
+	</p>	
+	
+	<p><span class="label label-github">Github</span> <a href="https://github.com/rootnode/lxc">LXC - container related code</a></p>
+
+	</section>
+        </div>
+        <div class="span3 bs-docs-sidebar">
+            <ul class="nav nav-list bs-docs-sidenav">
+                <li>
+                    <a href="#rootnode">
+                        <i class="icon-chevron-left"></i>
+                        Rootnode
+                    </a>
+                </li>
+                <li>
+                    <a href="#philosophy">
+                        <i class="icon-chevron-left"></i>
+                        Our philosophy
+                    </a>
+                </li>
+                <li>
+                    <a href="#scratch">
+                        <i class="icon-chevron-left"></i>
+                        From scratch
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

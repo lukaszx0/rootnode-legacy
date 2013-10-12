@@ -1,0 +1,64 @@
+    <footer>
+        <div class="container">
+            <div class="row">
+		<div class="span2">
+		    <h4>Learn the basics</h4>
+		    <ul class="unstyled">
+			<li><a href="/about#rootnode">About</a></li>
+			<li><a href="/about#philosophy">Philosophy</a></li>
+			<li><a href="/about#scratch">From scratch</a></li>
+			<li><a href="/features">Features</a></li>
+			<li><a href="/contact">Contact us</a></li>
+		    </ul>
+		</div>
+		<div class="span2">
+		    <h4>Documentation</h4>
+		    <ul class="unstyled">
+			<li><a href="/quickstart">Quickstart</a></li>
+			<li><a href="/satan/">Satan</a></li>
+			<li><a href="/web">Web</a></li>
+		    </ul>
+		</div>
+		<div class="span2">
+		    <h4>Internals</h4>
+		    <ul class="unstyled">
+			<li><a href="/container">Container</a></li>
+			<li><a href="/fastweb">Fastweb</a></li>
+			<li><a href="http://github.com/rootnode">Github <i class="icon-github"></i></a></li>
+		    </ul>
+		</div>
+		<div class="span2">
+		    <h4>Status pages</h4>
+		    <ul class="unstyled">
+			<li><a href="http://twitter.com/rootnode">Changelog <i class="icon-twitter"></i></a></li>
+			<li><a href="http://rootnodestatus.net">Rootnode status</a></li>
+			<li><a href="/roadmap">Roadmap</a> <span class="label label-important">New</span></li>
+			<li><a href="/lists">Mailing lists archive</a></li>
+		    </ul>
+		</div>
+		<div class="span3 promo">
+		    <h4>IT services</h4>
+                    <p>We provide IT services in web optimization, server administration and infrastructure design. We do server monitoring and task automation. We specialize in Apache2, Nginx web server, MySQL database and Debian GNU/Linux.</p>
+                    <p><span>Hire Linux administrator at&nbsp;&nbsp;<a href="http://marcinhlybin.com">marcinhlybin.com</a></span></p>
+		</div>
+            </div>
+        </div>
+	<div class="copy">
+		<div class="container">
+			<div class="row">
+				<div class="span9">
+					<p>All rights reserved &copy; <a href="http://marcinhlybin.com">marcinhlybin.com</a>. If you are reading this, you should definitely get an account. Rootnode, just for geeks. Join now.</a></p>
+				</div>
+			</div>
+		</div>
+	
+	</div>
+    </footer>
+    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/prettify.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/rootnode.js"></script>
+    <script type="text/javascript" src="/js/analytics.js"></script>
+</body>
+</html>

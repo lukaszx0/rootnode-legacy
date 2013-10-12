@@ -1,0 +1,164 @@
+<header id="overview" class="jumbotron subhead">
+    <div class="container">
+        <h1>Vhost</h1>
+        <p class="lead">Running a website</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <div class="span9">
+
+        <section id="vhost-management">
+          <div class="page-header">
+            <h1>Virtual host management</h1>
+          </div>
+	<p class="lead">Vhost module allows you to add a new website. See <a href="/infrastructure/web">web infrastructure</a> for details about web site hosting.</p>
+	
+	<h3 id="vhost-add">Add</h3>
+	<p>Add command takes 1 argument: <u>vhost name</u>.</p>
+	<pre>satan vhost <b>add</b> <span class="change">example.net</span></pre>
+	
+	<p>Add command creates a directory structure for virtual host in <tt>~/web</tt> directory. Now, you can add web site files to <tt>~/web/htdocs</tt> directory.</p>
+	<p><span class="label label-warning">Notice</span> Remember to restart web server with <code>apache2 restart</code> and <code>nginx restart</code> commands. Read more about <a href="vhost-web-server">web server configuration</a>.
+
+	<h3 id="vhost-list">List</h3>
+	<p>List command takes no arguments.</p>
+	<pre>satan vhost <b>list</b></pre>
+
+	<p>Results should be similar to the following.</p>
+<pre>
+Virtual hosts (1 in total)
+
+Domain name	Server name	Status
+example.net	web2
+</pre>
+
+	<h3 id="vhost-del">Delete</h3>
+	<p>Delete command takes 1 argument: <u>vhost name</u>.</p>
+	<pre>satan vhost <b>del</b> <span class="change">example.net</span></pre>
+	<p><span class="label label-important">Important</span> Delete command does NOT remove website files. Virtual host directory is changed to <span class="change">example.net (deleted)</span>. Virtual host Apache2 and Nginx configuration symlink is removed from <tt>sites-enabled</tt> directory. When you add the same vhost again, virtual host directory and web servers' configuration files are restored.</p> 
+
+	
+		
+	</section>
+	<section id="vhost-web-server">
+		<div class="page-header">
+			<h1>Web server configuration</h1>
+		</div>
+	<p class="lead">At a glance.</p>
+	<p>
+	Every user's container is equipped with 2 web servers:
+	<ul>
+		<li><strong>Nginx</strong> running on <code>lxc:8080</code> to serve <strong>static</strong> files.</li>
+		<li><strong>Apache2</strong> running on <code>localhost:8080</code> to process <strong>dynamic</strong> requests.
+	</ul>
+	Host <tt>lxc</tt> is the container local IP address (for example 10.1.12.34). Nginx works as a reverse proxy for Apache2.</p>
+
+	<p><span class="label label-warning">Notice</span> Web servers are not enabled by default and must be started with <code>nginx</code> and <code>apache2</code> commands.</p>
+
+	<h3 id="vhost-nginx">Nginx</h3>
+	<p>Nginx virtual host configuration can be found in <tt>~/etc/nginx/sites-enabled</tt> directory. This directory must contain only symlinks pointing to files in <tt>../sites-available</tt> directory.</p>
+
+	<h4 id="vhost-nginx-logs">Log files</h4>
+	<p>Log files are disabled by default and must be used only for debugging purposes as they have a huge impact on overall system performance.</p>
+
+	<p>Edit <tt>~/etc/nginx/sites-enabled/<span class="change">example.net</span></tt> virtual host config file and change following lines</p>
+<pre>
+# access_log /home/<span class="change">sampleuser</span>/web/<span class="change">example.net</span>/logs/nginx-access.log;
+# error_log  /home/<span class="change">sampleuser</span>/web/<span class="change">example.net</span>/logs/nginx-error.log crit;	
+access_log off;
+error_log /dev/null crit;
+</pre>
+<p>into</p>
+<pre>
+access_log /home/<span class="change">sampleuser</span>/web/<span class="change">example.net</span>/logs/nginx-access.log;
+error_log  /home/<span class="change">sampleuser</span>/web/<span class="change">example.net</span>/logs/nginx-error.log crit;	
+# access_log off;
+# error_log /dev/null crit;
+</pre>	
+	<p>After restarting Nginx with <code>nginx restart</code> command, logs are available in <tt>~/web/<span class="change">example.net</span>/logs</tt> directory.</p>
+
+	<p><span class="label label-important">Important</span> Remember to disable logs after debugging.</p>
+
+	<h3 id="vhost-apache2">Apache2</h3>
+	<p>Apache2 virtual host configuration can be found in <tt>~/etc/nginx/sites-enabled</tt> directory. This directory must contain only symlinks pointing to files in <tt>../sites-available</tt> directory.</p>
+	
+	<h4 id="vhost-apache2-logs">Log files</h4>
+	<p>Log files are disabled by default and must be used only for debugging purposes as they have a huge impact on overall system performance.</p>
+	<p>Edit <tt>~/etc/apache2/sites-enabled/<span class="change">example.net</span></tt> virtual host config file and uncomment following lines:</p>
+<pre>
+# LogLevel info
+# ErrorLog /home/<span class="change">sampleuser</span>/web/<span class="change">example.net</span>/logs/apache2-error.log
+# CustomLog /home/<span class="change">sampleuser</span>/web/<span class="change">example.net</span>/logs/apache2-access.log combined
+</pre>
+	<p>After restarting Apache2 with <code>apache2 restart</code> command, logs are available in <tt>~/web/<span class="change">example.net</span>/logs</tt> directory.</p>
+	<p><span class="label label-important">Important</span> Remember to disable logs after debugging.</p>
+
+	<h4 id="vhost-apache2-index">Directory index</h4>
+	<p>To enable directory autoindex globally edit <tt>~/etc/apache2/sites-enabled/<span class="change">example.net</span></tt> file changing <code>-Indexes</code> option to <code><b>+</b>Indexes</code>.</p>
+<pre>
+&lt;Directory /home/<span class="change">sampleuser</span>/web/<span class="change">example.net</span>/htdocs&gt;
+    Options <b>+Indexes</b> -FollowSymLinks
+    ...
+&lt;/Directory&gt;
+</pre>
+	<p>You can also <a href="#vhost-apache2-htaccess">enable .htaccess</a> support and add <code>Options +Indexes</code> line to <tt>.htaccess</tt> file in particular directory. However, better way is to add <code>&lt;Directory&gt;</code> directive inside vhost configuration.</p>
+<pre>
+&lt;Directory /home/<span class="change">sampleuser</span>/web/<span class="change">example.net</span>/htdocs/<span class="change">photos</span>&gt;
+    Options +Indexes
+&lt;/Directory&gt;
+</pre>
+
+	<h4 id="vhost-apache2-htaccess">.htaccess files</h4>
+	<p>From the performance point of view, processing virtual host config file is much faster than looking for the <tt>.htaccess</tt> file on each request. That is why, you should consider putting all options and rewrites directly into configuration file.</p>
+
+	<p>Anyhow, to enable <tt>.htaccess</tt> support change <code>-FollowSymLinks</code> to <code>+FollowSymLinks</code> and also <code>AllowOverride None</code> to <code>AllowOverride All</code>.</p>
+<pre>
+&lt;Directory /home/<span class="change">sampleuser</span>/web/<span class="change">example.net</span>/htdocs&gt;
+    Options -Indexes <b>+FollowSymLinks</b>
+    AllowOverride <b>All</b>
+    ...
+</pre>
+
+	<h4 id="vhost-apache2-rewrite">Rewrite</h4>
+	<p>Rewrite module is disabled by default. To enable rewrites use <code>a2enmod</code> command and restart Apache2.</p>
+<pre>
+a2enmod <b>rewrite</b>
+apache2 restart
+</pre>
+	<p>For more details about rewrite engine, take a look at the official <a href="http://httpd.apache.org/docs/2.2/mod/mod_rewrite.html">mod_rewrite documentation</a>.</p>
+	<p><span class="label label-warning">Notice</span> In some cases, it makes more sense to create rewrite in Nginx vhost config file.</p> 
+	</section>
+
+        </div>
+        <div class="span3 bs-docs-sidebar">
+            <ul class="nav nav-list bs-docs-sidenav">
+                <li>
+                    <a href="#mysql-management">
+                        <i class="icon-chevron-left"></i>
+                        MySQL management
+                    </a>
+                </li>
+                <li>
+                    <a href="#mysql-database">
+                        <i class="icon-chevron-left"></i>
+                        Database
+                    </a>
+                </li>
+                <li>
+                    <a href="#mysql-user">
+                        <i class="icon-chevron-left"></i>
+                        User
+                    </a>
+                </li>
+                <li>
+                    <a href="#mysql-client">
+                        <i class="icon-chevron-left"></i>
+                        Client configuration
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

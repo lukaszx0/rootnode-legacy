@@ -1,0 +1,136 @@
+#!/usr/bin/perl 
+#
+# alive - crontab service health checker
+# Rootnode http://rootnode.net
+#
+# Copyright (C) 2012 Marcin Hlybin
+# All rights reserved.
+
+use warnings;
+use strict;
+use Proc::ProcessTable;
+use Getopt::Long;
+use File::Basename;
+use IO::Socket;
+use Readonly;
+use Smart::Comments;
+
+Readonly my $USER => $ENV{USER};
+Readonly my $BASENAME => basename($0);
+Readonly my $USAGE => <<EOF;
+Usage: $BASENAME [ -v|--verbose ] [ --tcp host:port ] [ --sock file_name ] [ --ps process_name | --ps fname,cmndline ]
+
+\033[1mOPTIONS\033[0m
+   --tcp host:port       check TCP connection
+   --sock file_name      check UNIX socket
+   --ps process_name     check process 
+   --ps fname,cmndline   check process (detailed)
+   --verbose|-v          show status on stdout
+
+Options could be specified multiple times.
+
+List processes with
+ps -eo pid,user,fname,command
+
+\033[1mExample usage\033[0m
+alive --tcp 127.0.0.1:3306 && echo 'OK' || echo 'NOT OK' 
+alive --ps nginx || nginx restart
+
+\033[1mSample crontab entries\033[0m
+* * * * *      alive --ps unicorn_rails --sock /home/$USER/unicorn/application1.sock || /home/$USER/bin/start-unicorn.sh
+*/15 * * * *   alive --ps sample_server || bash ~/bin/sample_server.sh && (ps wuax | mail -s "Server restarted" $USER\@example.com)
+* * * * *      alive --ps nginx --tcp 10.1.12.34:8080 || nginx restart
+
+\033[1mUsage inside the script\033[0m
+if alive --ps nginx 
+then
+	do_some_action_here()
+fi
+
+EOF
+
+GetOptions(\my %opt,
+	'ps=s@',        # process name or fname, cmndline
+	'sock|tcp=s@',  # host:port or file name
+	'verbose',      # show status code
+	'help',         # show help
+);
+
+my %result;
+$result{ps}   = ps($opt{ps})     if defined $opt{ps};
+$result{sock} = sock($opt{sock}) if defined $opt{sock};
+
+die $USAGE unless keys %result;
+
+my @fail = grep defined, values %result;
+my $status_code = scalar @fail;
+
+if ($opt{verbose}) {
+	my $status_message = $status_code ? 'FAILED: ' . join (', ', @fail) : 'OK';
+	print "$status_message\n";
+}
+
+exit $status_code;
+
+sub ps {
+	# Process name check
+	my ($process_ref) = @_;
+
+	# Get process list
+	my $proc = new Proc::ProcessTable;
+	
+	PROCESS:
+	foreach my $process_name (@$process_ref) {
+		# Split file name and command name 
+		# if process name defined with comma
+		my ($fname, $cmndline) = split /,/, $process_name;
+		
+		PS:
+		foreach my $p ( @{$proc->table} ) {
+		        # Match file name and command name separately 
+			if (defined ($fname and $cmndline)) {
+				if ($p->fname eq $fname and
+				    $p->cmndline =~ /^$cmndline/) {
+					next PROCESS;
+				}
+			}
+			# Try to match file name or command name
+			else {
+				if ($p->fname    eq $fname or
+				    $p->cmndline eq $fname) {
+					next PROCESS;
+				}
+			}
+		}
+
+		return $process_name;
+	}
+
+	return;
+}
+
+sub sock {
+	# Check connection to the socket
+	my ($socket_ref) = @_;
+
+	SOCKET:
+	foreach my $socket_name (@$socket_ref) {
+		# Split socket name into host and port 
+		my ($host, $port) = split /:/, $socket_name;
+	
+		# Choose socket type
+		my $socket_type = defined ($host and $port) ? 'INET' : 'UNIX';
+
+		# Connect to socket
+		my $IO = "IO::Socket::$socket_type";
+		my $socket = $IO->new($socket_name);
+		if ($socket) {
+			$socket->close;
+			next SOCKET;
+		}
+
+		return $socket_name;
+	}
+
+	return;
+}

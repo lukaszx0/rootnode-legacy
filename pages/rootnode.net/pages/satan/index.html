@@ -1,0 +1,65 @@
+<header id="overview" class="jumbotron subhead">
+    <div class="container">
+        <h1>Satan</h1>
+        <p class="lead">The most hellish service manager</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <div class="span9">
+
+        <section id="satan">
+          <div class="page-header">
+            <h1>Satan </h1>
+          </div>
+	
+	<p class="lead">Satan is the best, tailor-made service manager out there with command line interface. No clicking, no time wasting, no hassle. Keep it simple, stupid.</p>
+	
+	<h3 id="modules">Available modules</h3>
+	<p>Satan provides the following modules.
+	<ul>
+		<li><a href="/satan/dns">DNS</a> to manage domanis</li>
+		<li><a href="/satan/mail">Mail</a> to manage mail accounts and aliases</li>	
+		<li><a href="/satan/vhost">Vhost</a> to manage web sites / virtual hosts</li>
+		<li><a href="/satan/mysql">MySQL</a> to manage MySQL databases and users</li>
+		<li><a href="/satan/ftp">FTP</a> to manage FTP accounts</li>
+	</ul>
+	</p>
+
+	<h3 id="architecture">Architecture</h3>
+	<p>Satan is divided into following parts.</p>
+	<table class="table table-hover">
+		<tr><th width="30%">Name</th><th>Description</th></tr>
+		<tr><td>Server</td><td>Daemon awaiting for connection from clients. It reads commands in plain-text or JSON format. Server requires authentication.</td></tr>
+		<tr><td>Client</td><td>User program to send commands to Satan from shell. You could also us <tt>telnet</tt> or <tt>nc</tt> but using client is more convenient.</td></tr>
+		<tr><td>Agent</td><td>Agent performs required server-side action. Usually by adding entries to database and reloading services.</td></tr>
+		<tr><td>Executor</td><td>Executor runs necessary action inside container with user privileges.</td></tr>
+	</table>
+
+	</section>
+        </div>
+        <div class="span3 bs-docs-sidebar">
+            <ul class="nav nav-list bs-docs-sidenav">
+                <li>
+                    <a href="#satan">
+                        <i class="icon-chevron-left"></i>
+                        Satan
+                    </a>
+                </li>
+                <li>
+                    <a href="#modules">
+                        <i class="icon-chevron-left"></i>
+                        Available modules
+                    </a>
+                </li>
+                <li>
+                    <a href="#architecture">
+                        <i class="icon-chevron-left"></i>
+                        Architecture
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

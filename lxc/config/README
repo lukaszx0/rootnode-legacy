@@ -1,0 +1,50 @@
+.
+├── README
+└── web
+    ├── ftp
+    ├── mysql
+    │   ├── dpkg-selections
+    │   ├── etc
+    │   │   ├── mysql
+    │   │   │   └── my.cnf
+    │   │   └── service
+    │   │       └── agent
+    │   │           └── run
+    │   └── install.sh
+    ├── nginx
+    │   ├── dpkg-selections
+    │   ├── etc
+    │   │   ├── nginx
+    │   │   │   ├── conf.d
+    │   │   │   │   └── map.conf
+    │   │   │   ├── fastcgi_params
+    │   │   │   ├── koi-utf
+    │   │   │   ├── koi-win
+    │   │   │   ├── mime.types
+    │   │   │   ├── nginx.conf
+    │   │   │   ├── sites-available
+    │   │   │   │   ├── default
+    │   │   │   │   └── proxy
+    │   │   │   ├── sites-enabled
+    │   │   │   │   ├── default -> ../sites-available/default
+    │   │   │   │   └── proxy -> ../sites-available/proxy
+    │   │   │   └── win-utf
+    │   │   └── service
+    │   │       ├── agent
+    │   │       │   └── run
+    │   │       └── nginx
+    │   │           └── run
+    │   ├── install.sh
+    │   ├── usr
+    │   │   └── src
+    │   │       └── nginx
+    │   │           └── run.sh
+    │   └── var
+    │       └── www
+    │           ├── 404.html
+    │           └── index.html
+    ├── proxy
+    ├── satan
+    └── smtp
+
+24 directories, 23 files

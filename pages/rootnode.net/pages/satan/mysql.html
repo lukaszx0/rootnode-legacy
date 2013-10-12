@@ -1,0 +1,180 @@
+<header id="overview" class="jumbotron subhead">
+    <div class="container">
+        <h1>MySQL</h1>
+        <p class="lead">MySQL database and user manipulation</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <div class="span9">
+
+        <section id="mysql-management">
+          <div class="page-header">
+            <h1>MySQL management</h1>
+          </div>
+	<p class="lead">Using satan you can easily manage MySQL databases and users and thanks to sophisticated listing you can immediately see what kind of access is granted.</p>
+	
+	<h3 id="mysql-database">Database</h3>
+	
+	<h4 id="mysql-database-add">Add</h4>
+	<p>Add command takes 2 arguments: <u>database name</u> and <u>password</u>. We use generated random password stored in <a href="#mysql-password-generator">$PASSWORD</a> variable.</p>
+<pre>
+satan mysql <b>add</b> <span class="change">example</span> <a href="#mysql-password-generator">$PASSWORD</a>
+</pre>
+
+	<h5 id="mysql-password-generator">Password generator</h5>
+	<p>It is a good idea to generate random password with <code>apg</code> command.</p>
+	<pre>PASSWORD=$(apg -n 1 -m <span class="change">16</span> -x <span class="change">20</span> -M SNCL)</pre>
+	<p>You can also use following Perl code.</p>
+	<pre>PASSWORD=$(perl -le 'print map { (a..z, 0..9)[rand 36] } 1..<span class="change">16</span>')</pre>
+
+	<p>All further commands are using this method. Generated password is stored in <tt>$PASSWORD</tt> shell variable and can be displayed with <code>echo $PASSWORD</code> command.</p>
+
+	<h5 id="mysql-database-name">Database naming convention</h5>
+	<p><span class="label label-important">Important</span> Real database name starts with prefix <code>my$UID_</code> where <tt>$UID</tt> is 4-digit user id. In all <code>satan</code> commands you can use names either with or without prefix. It will be recognized adequately.</p>
+	<p>Assuming that user id is 1234, real database name added by the command above would be <strong>my1234_example</strong> and this name should be used in all configuration files.</p>
+
+	<h5 id="mysql-default-user">Default database user</h5>
+	<p>Along with the database, default user is created. User name is the same as database name including <code>my$UID_</code> prefix. Default user has <strong>GRANT</strong> to grant privileges to other database users (if needed). To add additional users see <a href="#mysql-user-add">add user</a>.</p>
+
+	<h4 id="mysql-database-list">List</h4>
+	<p>List command takes no arguments.</p>
+	<pre>satan mysql <b>list</b></pre>
+	<p>Results will be similar to the following:</p>
+<pre>
+Databases (1 in total)
+
+Database	Users
+my1234_example	my1234_example
+</pre>
+	<p>From the listing you can see that the database and default user was created.</p>
+	
+	<h4 id="ftp-account-delete">Delete</h4>
+	<p>Delete command takes 1 argument: <u>database name</u>.</p>
+	<pre>satan mysql <b>del</b> <span class="change">example</span></pre>
+	<p>Remember to <a href="#">remove database users</a>, too.</p>
+	<p><span class="label label-important">Important</span> Delete command removes all database files. Files cannot be restore unless you have a database backup/dump.</p>
+
+	<h3 id="mysql-user">User</h3>
+	
+	<h4 id="mysql-user-add">Add</h4>
+	<p>After <code>satan mysql add</code> command, default user of the same name as database is created. You can add additionals users with add user command which takes 2 arguments: <u>user name</u> and <u>password</u>.</p>
+	<pre>satan mysql <b>add user</b> <span class="change">testuser</span> <a href="#mysql-password-generator">$PASSWORD</a></pre>
+
+	<h5 id="mysql-user-grants">Grants</h4>
+	<p>New user does NOT have any grants. To add grants connect to database with default user and use <code>GRANT</code> MySQL command.</p>
+	<pre>mysql -u <span class="change">my1234_example</a> -p<a href="#mysql-password-generator">$PASSWORD</a></pre>
+	<p>You should see MySQL prompt. Now you can GRANT some privileges to newly created user.</p>
+	<pre>mysql> GRANT SELECT ON <span class="change">my1234_example</span>.* TO '<span class="change">my1234_test</span>';</pre>
+
+	<h4 id="mysql-user-list">List</h4>
+	<p>There are many listings regarding database users: database users listing, all users listing and user grants listing. 
+
+	<h5 id="mysql-user-list-database-users">Database users</h5>
+	<p>List command shows all users having grants to particular database. Command takes 1 argument: <u>database name</u>.</p>
+	<pre>satan mysql <b>list</b> <span class="change">example</span></pre>
+	<p>Results should be similar to following.</p>
+<pre>
+my1234_example users (2 in total)
+
+User name	Host	Privileges
+my1234_example	any	ALL with GRANT
+my1234_testuser	any	Select
+</pre>
+	<p>
+	<tt>ALL with GRANT</tt> in MySQL nomenclature means <tt>ALL PRIVILEGES WITH GRANT OPTION</tt>.
+	</p>
+	
+	<h5 id="mysql-user-list-all-users">All users</h5>
+	<p>List users command shows all database users. Command takes no arguments.</p>
+	<pre>satan mysql <b>list users</b></pre>
+	
+	<p>Results should be similar to following.</p>
+<pre>
+Users (2 in total)
+
+User              Host    Databases
+my6000_example    any     my6000_example
+my6000_testuser   any     my6000_example
+</pre>
+	<h5 id="mysql-user-list-user-grants">User grants</h5>
+	<p>List user command shows all user grants. Command takes 1 argument: <u>user name</u>. <em>This option is not implemeted, yet.</em></pre>
+	<pre>satan mysql <b>list user</b> <span class="change">testuser</span></pre>
+	<p><span class="label label-todo">Todo</span> satan mysql list user</p>
+
+	<h4 id="mysql-user-delete">Delete</h4>
+	<p>Delete user command takes 1 arguments: <u>user name</u></p>
+	<pre>satan mysql <b>del user</b> <span class="change">testuser</span></pre>
+
+	<p><span class="label label-warning">Notice</span> It is not a good idea to remove default database user as this user has GRANT option to the database.</p>
+
+	<h5 id="mysql-user-orphaned">Orphaned users</h5>
+	<p>Orphaned user is the user with grants to non-existing database. When you delete <span class="change">example</span> database you should see following entry in <code>satan mysql list</code> listing:</p>
+	<pre>
+Orphaned entries (1 in total)
+
+Database	Users
+my1234_example	my1234_testuser
+</pre>
+	
+	<h4 id="mysql-user-passwd">Password change</h4>
+	<p>Passwd command takes 2 arguments: <u>user name</u> and <u>password</u>. It is a good idea to use random generated <a href="#">password</a>.</p>
+	<pre>satan mysql <b>passwd</b> <span class="change">testuser</span> <a href="#mysql-password-generator">$PASSWORD</a></pre>
+
+        </section>
+        <section id="mysql-client">
+          <div class="page-header">
+            <h1>Client configuration</h1>
+          </div>
+	<p>Remember to use database name and user name along with the prefix <code>my$UID_</code>.
+	Currently MySQL waits for connection on <strong>127.0.0.1:3306</strong>. In the near future connection host will change because 127.0.0.1 raises routing problems.</p>
+	
+	<p><span class="label label-important">Important</span> Do not use <em>localhost</em> name as an alias for 127.0.0.1. You must always use <strong>127.0.0.1</strong>.</p>
+
+	<h3 id="mysql-client-monitor">mysql commmand</h3>
+	<p>You can connect to database directly from shell using <code>mysql</code> command.</p>
+	<pre>mysql -h 127.0.0.1 -u <span class="change">my1234_example</span> -p<a href="#mysql-password-generator">$PASSWORD</a></pre>
+	
+	<h3 id="mysql-client-pma">phpMyAdmin</h3>
+	<p>phpMyAdmin is not available at the moment.</p> 
+	<p><span class="label label-todo">Todo</span> phpMyAdmin</p>
+
+	<h3 id="mysql-client-tunnel">SSH tunnel</h3>
+	<p>You can access MySQL from your desktop by setting up an SSH tunnel.</p>
+	<pre>ssh -L <span class="change">1234</span>:127.0.0.1:3306 <span class="change">user@web1.rootnode.net</span></pre>
+	<p>From now on you can access MySQL on your desktop connecting to 127.0.0.1 on port <span class="change">1234</span></p>
+	
+	</section>
+
+        </div>
+        <div class="span3 bs-docs-sidebar">
+            <ul class="nav nav-list bs-docs-sidenav">
+                <li>
+                    <a href="#mysql-management">
+                        <i class="icon-chevron-left"></i>
+                        MySQL management
+                    </a>
+                </li>
+                <li>
+                    <a href="#mysql-database">
+                        <i class="icon-chevron-left"></i>
+                        Database
+                    </a>
+                </li>
+                <li>
+                    <a href="#mysql-user">
+                        <i class="icon-chevron-left"></i>
+                        User
+                    </a>
+                </li>
+                <li>
+                    <a href="#mysql-client">
+                        <i class="icon-chevron-left"></i>
+                        Client configuration
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

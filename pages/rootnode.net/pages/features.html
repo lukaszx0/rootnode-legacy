@@ -1,0 +1,115 @@
+<header id="overview" class="jumbotron subhead">
+    <div class="container">
+        <h1>Features</h1>
+        <p class="lead">Account parameters and usage</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <div class="span9">
+
+        <section id="matrix">
+          <div class="page-header">
+            <h1>Feature matrix</h1>
+          </div>
+
+	<p class="lead">We are bulding our services <a href="/about#scratch">from scratch</a>. It takes a hell of a lot of time but we have big plans and we are very eager to get everything back.</p>
+	<p>Currently, our users have only access to <em>Web</em> containers. In the near future we are planning to run the <a href="/fastweb">Fastweb</a> platform in order to take over heavy traffic of the web applications written in Ruby, Python and PHP.</p>
+
+	<h3 id="basic">Basic services</h3>
+	<table class="table table-hover">
+		<tr><th width="30%">Feature</th><th>Status</th><th width="50%">Comment</th></tr>
+		<tr><td><a href="/satan/ftp">FTP</a></td><td><i class="icon-ok"></i> OK</td><td></td></tr>
+		<tr><td><a href="/satan/dns">DNS</a></td><td><i class="icon-ok"></i> OK</td><td><span class="label label-todo">Todo</span> multiple rootnode.net subdomains</td></tr>
+		<tr><td><a href="/satan/mail">Mail</a></td><td><i class="icon-ok"></i> OK</td><td><span class="label label-todo">Todo</span> rootnode.net domain support</td></tr>
+		<tr><td><a href="/satan/mysql">MySQL</a></td><td><i class="icon-ok"></i> OK</td><td>To be moved to dedicated platform.</td></tr>
+		<tr><td>PostgreSQL</td><td><i class="icon-remove"></i> not working</td><td></td></tr>
+		
+		<tr><td>Backup</a></td><td><i class="icon-remove"></i> partially working</td><td>Backup works but no access to backuped filed for users.</td></tr>
+	</table>
+
+
+	<h3 id="web">Web applications</h3>
+	<table class="table table-hover">
+		<tr><th width="30%">Feature</th><th>Status</th><th width="50%">Comment</th></tr>
+		<tr><td><a href="/web/ruby">Ruby</a></td><td><i class="icon-ok"></i> OK</td><td>To be handled by <a href="/fastweb">Fastweb</a> platform or <em>App</em> type containers. Currently, application can be deployed in <em>Web</em> container.</td>
+		<tr><td>Python</td><td><i class="icon-ok"></i> OK</td><td>To be handled by <a href="/fastweb">Fastweb</a> platform. Currently, application can be deployed in <em>Web</em> container but <strong>no documentation</strong>.</td>
+		<tr><td><a href="/satan/vhost">PHP</a></td><td><i class="icon-ok"></i> OK</td><td></td></tr>
+		<tr><td>HTTPS support</td><td><i class="icon-remove"></i> not working</td><td>To be handled by <a href="/fastweb">Fastweb</a> platform.</td>
+		<tr><td>Rewrite engine</td><td><i class="icon-ok"></i> OK</td><td>Supported either in Apache2 and Nginx <em>(reverse proxy)</em></td></tr>
+		<tr><td><tt>.htaccess</tt> support</td><td><i class="icon-ok"></i> OK</td><td></td></tr>
+	</table>
+
+	<h3 id="tools">Developer tools</h3>
+	<table class="table table-hover">
+		<tr><th width="30%">Feature</th><th>Status</th><th width="50%">Comment</th></tr>
+		<tr><td>Git <em>(server)</em></td><td><i class="icon-ok"></i> partially working</td><td>No documentation. Possible to run standalone server in <em>Web</em> container.</td></tr>
+		<tr><td>Subversion <em>(server)</em></td><td><i class="icon-ok"></i> partially working</td><td>No documentation. Possible to run Subversion server with WebDAV support in <em>Web</em> container.</td></tr>
+		<tr><td>Gcc and C tools</td><td><i class="icon-ok"></i> OK</td><td></td></tr>
+		<tr><td>Perl</td><td><i class="icon-ok"></i> OK</td><td>We love Perl :)</td></tr>
+		<tr><td>Other languages</td><td><i class="icon-ok"></i> OK</td><td>Additional package installation on request.</td></tr>
+	</table>
+
+	<h3 id="additional">Additional services</h3>
+	<table class="table table-hover">
+		<tr><th width="30%">Feature</th><th>Status</th><th width="50%">Comment</th></tr>
+		<tr><td>Streaming servers <em>(shoutcast)</em></td><td><i class="icon-remove"></i> partially working</td><td>Shoutcast can be run in <em>Web</em> container.</td></tr>
+		<tr><td><del>Game servers</del></td><td><i class="icon-remove"></i> service removed</td><td></td></tr>
+		<tr><td>VPN</td><td><i class="icon-remove"></i> not working</td><td></td></tr>
+		<tr><td>Proxy</td><td><i class="icon-remove"></i> not working</td><td></td></tr>
+		<tr><td>Torrent</td><td><i class="icon-remove"></i> not working</td><td></td></tr>
+	</table>
+
+	<h3 id="account">Account parameters</h3>
+	<table class="table table-hover">
+		<tr><th width="30%">Feature</th><th>Status</th><th width="50%">Comment</th></tr>
+		<tr><td>Shell access</td><td><i class="icon-ok"></i> OK</td><td></td></tr>
+		<tr><td>Exec privilege</td><td><i class="icon-ok"></i> OK</td><td></td></tr>
+		<tr><td>Cron jobs</td><td><i class="icon-ok"></i> OK</td><td></td></tr>
+	</table>
+
+	</section>
+        </div>
+        <div class="span3 bs-docs-sidebar">
+            <ul class="nav nav-list bs-docs-sidenav">
+                <li>
+                    <a href="#matrix">
+                        <i class="icon-chevron-left"></i>
+                        Feature matrix
+                    </a>
+                </li>
+                <li>
+                    <a href="#basic">
+                        <i class="icon-chevron-left"></i>
+                        Basic services
+                    </a>
+                </li>
+                <li>
+                    <a href="#web">
+                        <i class="icon-chevron-left"></i>
+                        Web applications
+                    </a>
+                </li>
+                <li>
+                    <a href="#tools">
+                        <i class="icon-chevron-left"></i>
+                        Developer tools
+                    </a>
+                </li>
+                <li>
+                    <a href="#additional">
+                        <i class="icon-chevron-left"></i>
+                        Additional services
+                    </a>
+                </li>
+                <li>
+                    <a href="#account">
+                        <i class="icon-chevron-left"></i>
+                        Account parameters
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

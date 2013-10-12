@@ -1,0 +1,180 @@
+<header id="overview" class="jumbotron subhead">
+    <div class="container">
+        <h1>DNS</h1>
+        <p class="lead">Domain management</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <div class="span9">
+
+        <section id="dns">
+          <div class="page-header">
+            <h1>DNS management</h1>
+          </div>
+<p class="lead">You can manipulate DNS records fast and easily with Satan. This manual shows how to add basic DNS records, delegate a domain and add special Rootnode TXT record for domain auth.</p>
+
+	<p>It is possible to delegate DNS support to third-party provider but it is <strong>highly unrecommended</strong>. Rootnode's IP addresses can change in the future and, by not having DNS managed by us, such operation would require user attention.</p>
+
+	<h3 id="domain">Domain</h3>
+	
+	<h4 id="domain-add">Add</h4>
+	<p>Add command takes 1 argument: <u>domain name</u>. Adding new domain is as simple as:</p>
+	<pre>satan dns <b>add</b> <span class="change">example.net</span></pre>
+	<p>Basic DNS records will be added along with the domain. That is SOA, NS, A, CNAME and MX.</p>
+
+	<h4 id="domain-list">List</h4>
+	<p>List command to display domain list takes no arguments or 1 argument <u>domain name</u> to show DNS records for particular domain.</p>
+	<pre>satan dns <b>list</b></pre>
+	<p>Results will be similar to the following.</p>
+	<pre>
+Domains (1 in total)
+
+Name                SOA   NS   A   AAAA   CNAME   MX   TXT   SRV   PTR   
+example.net         1     2    1   -      1       2    -     -     -</pre>
+	<p>By adding domain name to the list command we can see DNS records.</p>
+	<pre>satan dns <b>list</b> <span class="change">example.net</span></pre>
+	<p>Results show basic DNS records added by default.</p>
+	<pre>
+Domain example.net (7 in total)
+
+ID      Name            Type    Content                                                              TTL   Priority   
+70054   example.net     SOA     ns1.rootnode.net hostmaster.rootnode.net 666 10800 3600 604800 300   300   -          
+70055   example.net     NS      ns1.rootnode.net                                                     300   -          
+70056   example.net     NS      ns2.rootnode.net                                                     300   -          
+70057   example.net     A       94.23.146.10                                                         300   -          
+70058   *.example.net   CNAME   example.net                                                          300   -          
+70059   example.net     MX      mail1.rootnode.net                                                   300   10         
+70060   example.net     MX      mail2.rootnode.net                                                   300   10
+</pre>   
+
+	<h4 id="domain-delete">Delete</h4>
+	<p>Domain can be removed with del domain command. It takes 1 argument: <u>domain name</u>.</p>
+	
+	<pre>satan dns <b>del</b> <span class="change">example.net</span></pre>
+	
+	<p><span class="label label-important">Important</span> Delete command will purge all DNS records belonging to the domain. Be careful! This operation cannot be undone.</p>
+
+	<h3 id="records">DNS records</h3>
+	
+	<h4 id="records-add">Add</h4>
+	<p>Add command takes different number of arguments depending on the record type. 3 first arguments are: <u>domain_name</u>, <u>record type</u> and <u>host name</u>.</p>
+	<p>Host name can take 3 types of values:
+	<ul>
+		<li>actual host name</li>
+		<li>sign @ (at) meaning base record</li>
+		<li>sign . (dot) meaning wildcard record</li>
+	</ul> 
+
+	<p>Available record types are: A, AAAA, CNAME, MX, TXT, SRV, SOA, NS, PTR.</p>
+
+	<h5 id="record-a">Record A and AAAA</h5>
+	<p>Base A record for example.net. <br/>Bind notation: <tt>@ IN A 94.23.145.245</tt></p>
+
+	<pre>satan dns <b>add</b> <span class="change">example.net</span> <b>a @</b> <span class="change">94.23.145.245</span></pre>
+	<p>Wildcard A record *.example.net. <br/>Bind notation: <tt>* IN A 94.23.145.245</tt></p>
+	<pre>satan dns <b>add</b> <span class="change">example.net</span> <b>a .</b> <span class="change">94.23.145.245</span></pre>
+	<p>Regular host name test.example.net. <br/>Bind notation: <tt>test IN A 94.23.145.245</tt></p>
+	<pre>satan dns <b>add</b> <span class="change">example.net</span> <b>a</b> <span class="change">test 94.23.145.245</span></pre>
+	<p>For IPv6 change A to AAAA and use IPv6 addresses.</p>	
+
+	<h5 id="record-cname">Record CNAME</h5>
+	<p>The most popular scenario is to create a wildcard for the domain.</p>
+	<pre>satan dns <b>add</b> <span class="change">example.net</span> <b>cname .</b> <span class="change">example.net</span></pre>
+
+	<p><span class="label label-warning">Notice</span> Do not use CNAME record as the domain base record (@ sign).</p>
+
+	<h5 id="record-mx">Record MX</h5>
+	<p>MX record takes 2 arguments: <u>domain name</u> and optionally <u>priority</u>. MX records usually are domain base records (@ sign).</p>
+	<pre>satan dns <b>add</b> <span class="change">example.net</span> <b>mx @</b> <span class="change">mail1.rootnode.net 10</span></pre>
+
+	<h5 id="record-txt">Record TXT</h5>
+	<p>Text value must be enclosed in quotation marks. Usually TXT record is used as domain base record.</p>
+	<pre>satan dns <b>add</b> <span class="change">example.net</span> <b>txt @</b> <span class="change">"v=spf1 mx a -all"</span></pre>
+
+	<h5 id="record-srv">Record SRV</h5>
+	<p>SRV record is quite special and takes 5 arguments: <u>host name</u> (in format _service._proto), <u>priority</u>, <u>weight</u>, <u>port</u>, <u>domain name</u>.</p>
+	<pre>satan dns <b>add</b> <span class="change">example.net</span> <b>srv</b> <span class="change">_xmpp-client._tcp 5 0 5222 xmpp.com</span></pre>
+
+	<h5 id="record-soa">Record SOA</h5>	
+	<p>There is no need to add SOA record as a domain base record as it is added by default to every domain managed by Satan. Usually, SOA record combined with NS records is used to <a href="#delegation">delegate subdomain</a>. Command takes 3 arguments: <u>host name</u>, <u>nameserver</u> and <u>mail address</u>.</p>
+
+	<pre>satan dns <b>add</b> <span class="change">example.net</span> <b>soa</b> <span class="change">coolsubdomain ns1.other.com contact@other.com</span></pre>
+
+	<h5 id="record-ns">Record NS</h5>
+	<p>NS record takes 2 arguments: <u>host name</u> and <u>domain name</u>.</p>
+<pre>
+satan dns <b>add</b> <span class="change">example.net</span> <b>ns @</b> <span class="change">ns1.rootnode.net</span>
+satan dns <b>add</b> <span class="change">example.net</span> <b>ns @</b> <span class="change">ns2.rootnode.net</span>
+</pre>
+	<h5 id="record-ptr">Record PTR</h5>
+	<p>PTR record takes 2 arguments: <u>host name</u> and <u>domain name</u>. Usually this type of record is created for IP address, not domain name. However, creating a CNAME record for in-addr.arpa entry you can manage PTR record on you own.</p>
+	<pre>satan dns <b>add</b> <span class="change">example.net</span> <b>ptr</b> <span class="change">165.10 stallman.rootnode.net</span></pre>	
+	<p>In this example IP address 89.248.165.10 points 10.165.248.89.in-addr.arpa domain. Latter is a CNAME to 165.10.rootnode.net which, thanks to PTR record, points to stallman.rootnode.net.</p>
+	<p><span class="label label-warning">Notice</span> Arpa domains are managed by IP providers and usually there is no easy way to manage those records. PTR record allows you to change destination domain whenever you want.</span></p>
+
+	<h4 id="records-list">List</h4>	
+	<p>See <a href="#domain-list">domain list</a>.</p>
+
+	<h4 id="records-delete">Delete</h4>
+	<p>Delete command takes 1 argument: <u>record id</u>. Record ID can be found in the first column of record listing. You can display all domain records with <code>satan dns list <span class="change">example.net</span></code> command.</p>
+
+	<pre>satan dns <b>del</b> <span class="change">666</span></pre>
+
+	<h3 id="rootnode-txt-record">Rootnode TXT record</h3>
+	<p>We use a special TXT record to confirm you as a domain owner. The record starts with <tt>rootnode</tt> keyword followed by <tt>key=value</tt> fields.</p>
+	<pre>satan dns <b>add</b> <span class="change">example.net</span> <b>txt @ "rootnode uid=</b><span class="change">1234</span><b>"</b></pre>
+
+	<p>Supported keys are:
+	<ul>
+		<li><strong>uid</strong> - 4-digit user id. Uid can be checked with <code>id</code> command.</li>
+	</ul>
+	</p>
+
+	<h3 id="delegation">Domain delegation</h3>
+	<p>In order to delegate a subdomain you have to add <a href="#record-soa">SOA</a> and <a href="#record-ns">NS</a> records.</p>
+<pre>
+satan dns <b>add</b> <span class="change">example.net</span> <b>soa</b> <span class="change">other ns1.other.com contact@other.com</span>
+satan dns <b>add</b> <span class="change">example.net</span> <b>ns</b> <span class="change">other ns1.other.com</span>
+satan dns <b>add</b> <span class="change">example.net</span> <b>ns</b> <span class="change">other ns2.other.com</span>
+</pre> 
+
+        </section>
+        </div>
+        <div class="span3 bs-docs-sidebar">
+            <ul class="nav nav-list bs-docs-sidenav">
+                <li>
+                    <a href="#dns">
+                        <i class="icon-chevron-left"></i>
+                        DNS management
+                    </a>
+                </li>
+                <li>
+                    <a href="#domain">
+                        <i class="icon-chevron-left"></i>
+                        Domain
+                    </a>
+                </li>
+                <li>
+                    <a href="#records">
+                        <i class="icon-chevron-left"></i>
+                        DNS records
+                    </a>
+                </li>
+                <li>
+                    <a href="#rootnode-txt-record">
+                        <i class="icon-chevron-left"></i>
+                        Rootnode TXT record
+                    </a>
+                </li>
+                <li>
+                    <a href="#delegation">
+                        <i class="icon-chevron-left"></i>
+                        Domain delegation
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

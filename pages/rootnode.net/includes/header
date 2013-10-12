@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="shell account, shell, hosting, cheap, best, europe, php, python, ruby, ruby on rails, irc, ssh, torrent, django, pylons, perl, console, java, shoutcast, MySQL, PostgreSQL, redis, memcache, mangodb, backup" />
+    <meta name="description" content="Shell account with 50GB drive space,and no transfer limits for 50EUR per year. Ruby on Rails, Python, Perl, PHP, Java, gcc, torrent, shoutcast and more." />
+    <title>Rootnode - shell hosting for geeks with Ruby, Python and PHP</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" media="all">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-responsive.css" media="all">
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.css" media="all">
+    <link rel="stylesheet" type="text/css" href="/css/rootnode.css" media="all">
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body data-spy="scroll" data-target=".bs-docs-sidebar">
+
+    <div class="navbar navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="nav-collapse collapse">
+                    <ul class="nav">
+                        <li class="active">
+                            <a href="/" class="icon-home"></a>
+                        </li>
+                        <li class="">
+                            <a href="/about">About</a>
+                        </li>
+                        <li class="">
+                            <a href="/pricing">Pricing</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown">
+                                Tools
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="https://webmail.rootnode.net">Webmail</a></li>
+                                <li><a href="#">PHPMyAdmin</a></li>
+                                <li><a href="/irc">IRC channel</a></li>
+                            </ul>
+                        </li>
+                        <li class="">
+                            <a href="/contact">Contact us</a>
+                        </li>
+                        <li class="signin">
+                            <a href="/signup">Sign up</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,184 @@
+<header id="overview" class="jumbotron subhead">
+    <div class="container">
+        <h1>Mail</h1>
+        <p class="lead">Account configuration and management</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <div class="span9">
+
+        <section id="mail-configuration">
+          <div class="page-header">
+            <h1>Mail configuration with Satan</h1>
+          </div>
+<p class="lead">After reading this manual you will know how to enable mail support for your domain and how to add mail accounts or aliases.</p>
+
+	<p>You can delegate mail support to third-party provider with appropriate <a href='#'>DNS configuration</a> by setting MX records.</p>
+
+	<p>There are 3 types of mail actions: <strong>domain</strong>, <strong>user</strong> and <strong>alias</strong>. Later in this section <em>mail user</em> is also called <em>mail account</em> or <em>mailbox</em>. It is always recommended to read <code>satan mail help</code> manual before using mail command.</p>
+
+	<p><span class="label label-info">Prerequisites</span> In order to add mail support to your domain, domain must have an appropriate <a href='#'>Rootnode TXT record</a>.</p> 
+
+	<h3 id="mail-domain">Mail domain</h3>
+	
+	<h4>Add</h4>
+	<p>Before adding mail account you must enable mail support for a domain. We assume you have already added the domain with <code>satan dns add</code> command. More about domain configuration you can find on <a href="/satan/dns">Satan DNS</a> page.</p>
+	
+	<p>Add domain command has 1 argument <u>domain name</u>.</p>
+
+	<pre>satan mail <b>add domain</b> <span class="change">example.net</span></pre>
+
+	<h4>List</h4>
+	<p>To print all of your mail domains use list command with no arguments.</p>
+	<pre>satan mail <b>list</b></pre>
+
+	<p>Result will be similar to the following.</p>
+<pre>
+Domains (1 in total)
+
+Domain name      Users   Aliases   Created at            
+example.net      0       0         2012-10-05 08:40:26</pre>
+
+<p>As you can see we successfully added new domain to the mail system.</p>
+
+	<h4>Delete</h4>
+	Domain can be removed with del domain command. It takes 1 argument: <u>domain name</u>.
+	
+	<pre>satan mail <b>del domain</b> <span class="change">example.net</span></pre>
+	
+	<p><span class="label label-important">Important</span> Delete command will remove all mail accounts and aliases that belongs to the domain. Mailbox files will NOT be removed and will be restored and used after adding the same mail accounts again.</p>
+
+	<h4>Password change</h4>
+	<p>Password command takes 2 arguments: <u>e-mail address</u> and <u>new password</u>. It is a good idea to generate a new password with <tt>apg</tt> command or following Perl code.</p>
+	<pre>
+PASSWORD=$(perl -le 'print map { ("a".."z", 0..9)[rand 36] } 1..12')
+satan mail <b>passwd</b> <span class="change">hello@example.net</span> $PASSWORD</pre>
+
+
+	<h3 id="mail-account">Mail account</h3>
+	
+	<h4>Add</h4>
+	<p>To add mail account also called mail user use add user command which takes 2 arguments: <u>e-mail address</u> and <u>password</u>.</p>
+
+	<pre>
+PASSWORD=$(perl -le 'print map { ("a".."z", 0..9)[rand 36] } 1..12')
+satan mail <b>add user</b> <span class='change'>hello@example.net</span> $PASSWORD</pre>
+
+<p><span class="label label-warning">Notice</span> Perl code was used to generate a random password for new mail account. The password is stored in <tt>$PASSWORD</tt> shell variable. To see generated password type</p>
+<pre>echo $PASSWORD</pre>
+
+	<h4>List</h4>
+	<p>To list mail accounts (and aliases) use list command with 1 argument: <u>domain_name</u>.</p>
+	<pre>satan mail <b>list</b> <span class="change">example.net</span></pre>
+
+	<p>Results will be similar to the following.</p>
+	<pre>
+Users for example.net (1 in total)
+
+User                Created at            
+hello@example.net   2012-10-05 08:40:44   
+
+No mail aliases.</pre>
+
+	<h4>Delete</h4>
+	<p>Mail account can be removed with del user command. It takes 1 argument: <u>e-mail address</u>.
+	<pre>satan mail <b>del user</b> <span class="change">hello@example.net</span></pre>
+
+	<p><span class="label label-important">Important</span> Delete command will NOT remove mail files. Data can be restored at any time by adding the same mailbox again.</p>
+
+	<h3 id="mail-alias">Mail alias</h3>
+
+	<h4>Add</h4>
+	<p>Add alias command has 2 arguments: <u>alias e-mail</u> and <u>destination e-mail</u>. You can create normal alias or catch-all alias. Catch-all alias catches all e-mails sent to the domain unless mail account of the same name exists. In such case e-mail is not catched by catch-all alias but it is delivered to the existing mail account.</p>
+
+	<h5>Normal alias</h5>
+	<p>Add alias command has 2 arguments: <u>alias e-mail</u> and <u>destination e-mail</u>.</p>
+<pre>satan mail <strong>add alias</strong> <span class="change">contact@example.net hello@gmail.com</span></pre>
+	<p>Destination e-mail does not have to be an e-mail address in the same domain as alias.</p>
+
+	<h5>Catch-all alias</h5>
+	<p>Catch-all alias also takes 2 arguments: <u>alias domain</u> (preceded by the @ sign) and <u>destination e-mail</u></p>
+<pre>satan mail <strong>add alias</strong> <span class="change">@example.net hello@example.net</span></pre>
+
+	<h4>List</h4>
+	<p>To list mail aliases (and accounts) use list command with 1 argument: <u>domain_name</u>.</p>
+	<pre>satan mail <b>list</b> <span class="change">example.net</span></pre>
+
+	<p>Results will be similar to the following.</p>
+	<pre>
+Users for example.net (1 in total)
+
+User                 Created at            
+hello@example.net    2012-10-05 08:40:44   
+
+Aliases for example.net (2 in total)
+
+Name                  Mail                Created at            
+contact@example.net   hello@gmail.com     2012-10-05 08:41:21   
+*@example.net         hello@example.net   2012-10-05 08:41:36</pre>
+
+
+        </section>
+            <section id="mail-client">
+                <div class="page-header">
+                    <h1>Client configuration</h1>
+                </div>
+
+		<p>
+		Mail client should always use secure data connection. TLS and SSL are supported. Mail host is <strong>mail1.rootnode.net</strong>. Connection ports are default depending on encryption method. Use full e-mail address as user name.
+		</p>
+
+
+		</section>
+            <section id="mail-webmail">
+                <div class="page-header">
+                    <h1>Webmail</h1>
+                </div>
+		<p>Webmail is available at <a href="https://webmail.rootnode.net">https://webmail.rootnode.net</a></p>
+		<p><span class="label label-important">Important</span> Always make sure that you use secure <strong>HTTPS</strong> connection.</p>
+            </section>
+        </div>
+        <div class="span3 bs-docs-sidebar">
+            <ul class="nav nav-list bs-docs-sidenav">
+                <li>
+                    <a href="#mail-configuration">
+                        <i class="icon-chevron-left"></i>
+                        Mail configuration
+                    </a>
+                </li>
+                <li>
+                    <a href="#mail-domain">
+                        <i class="icon-chevron-left"></i>
+                        Mail domain
+                    </a>
+                </li>
+                <li>
+                    <a href="#mail-account">
+                        <i class="icon-chevron-left"></i>
+                        Mail account
+                    </a>
+                </li>
+                <li>
+                    <a href="#mail-alias">
+                        <i class="icon-chevron-left"></i>
+                        Mail alias
+                    </a>
+                </li>
+                <li>
+                    <a href="#mail-client">
+                        <i class="icon-chevron-left"></i>
+                      	Client configuration
+                    </a>
+                </li>
+                <li>
+                    <a href="#mail-webmail">
+                        <i class="icon-chevron-left"></i>
+                        Webmail
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

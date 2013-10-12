@@ -1,0 +1,41 @@
+Payment integration
+Rootnode http://rootnode.net
+
+Database schema
+
+DROP TABLE IF EXISTS payu;
+CREATE TABLE payu (
+        login VARCHAR(32),
+        status VARCHAR(32),
+        trans_id INT,
+        trans_pos_id INT,
+        trans_session_id VARCHAR(64),
+        trans_amount INT,
+        trans_status INT,
+        trans_pay_type CHAR(2),
+        trans_desc VARCHAR(64),
+        trans_desc2 VARCHAR(16),
+        trans_create DATETIME,
+        trans_init DATETIME,
+        trans_sent DATETIME,
+        trans_recv DATETIME,
+        trans_cancel DATETIME,
+        trans_ts INT,
+        trans_sig CHAR(32),
+	done BOOLEAN DEFAULT 0,
+        PRIMARY KEY(trans_id),
+        KEY(login)
+) ENGINE=MyISAM, CHARACTER SET=UTF8;
+
+DROP TABLE IF EXISTS user;
+CREATE TABLE user (
+        id CHAR(16),
+        login VARCHAR(20),
+        amount INT UNSIGNED,
+        first_name VARCHAR(30),
+        last_name VARCHAR(30),
+        mail VARCHAR(60),
+        lang CHAR(2),
+        PRIMARY KEY(login),
+        KEY(id)
+) ENGINE=MyISAM, CHARACTER SET=UTF8;

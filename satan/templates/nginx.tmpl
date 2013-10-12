@@ -1,0 +1,87 @@
+server {
+  listen lxc:8080;
+  server_name www.%%vhost_name%%;
+
+  # Redirect www.domain.com -> domain.com
+  return 301 $scheme://%%vhost_name%%$request_uri;
+}
+
+server {
+    listen lxc:8080;
+    server_name %%vhost_name%%;
+
+    root %%vhost_path%%/htdocs;
+    index index.html index.php;
+    error_page 418 = @proxy;
+
+    # Logs have serious impact on I/O performance
+    # Use for debugging only
+    # access_log %%vhost_path%%/logs/nginx-access.log;
+    # error_log  %%vhost_path%%/logs/nginx-error.log crit;
+    access_log off;
+    error_log /dev/null crit;
+
+    ### Wordpress
+    # Catch the wordpress cookies.
+    include /etc/nginx/conf.d/wordpress-cookie.conf;
+
+    # Secure login panel
+    # Create special directory to access wp-admin page
+    # with following index.php file:
+    # <?php
+    #     setcookie('%%wordpress_key%%', '1', 0, '/');
+    #     header("Location: http://%%vhost_name%%/wp-admin");
+    # ?>
+        
+    location ~ ^/(wp-admin|wp-login.php) {
+        if ($http_cookie ~ '%%wordpress_key%%') {
+            return 418;
+        }
+
+        # Authorization required
+        return 401;
+    }
+
+    #
+    ### end of Wordpress
+
+    # Static files
+    location ~* ^.+\.(jpe?g|gif|png|ico|css|zip|tgz|gz|rar|bz2|doc|xls|exe|pdf|ppt|txt|tar|mp3)$ {
+        expires 30d;
+    }
+
+    location / {
+        # I'm a teapot!
+        return 418;
+    }
+
+    # Proxy
+    location @proxy {
+        internal;
+        # Get proxy configuration
+        include /etc/nginx/conf.d/proxy.conf;
+
+        # Enable proxy cache
+        set $cache_key $scheme$host$uri$is_args$args;
+        proxy_cache main;
+        proxy_cache_key $cache_key;
+        proxy_cache_valid 200 301 302 10m;
+
+	# Do not cache when Pragma or Authorization header exist
+	# Use without pragma when slashdot effect
+	# proxy_cache_bypass $http_authorization;
+	proxy_cache_bypass $http_pragma $http_authorization;
+	
+	# Uncomment to cache everything
+	# proxy_ignore_headers Cache-Control Expires;
+        
+	### Wordpress
+        # Do not cache logged in user
+        include /etc/nginx/conf.d/wordpress-cache.conf;
+        #
+        ### end of Wordpress
+
+        # Send to Apache2
+        proxy_pass http://localhost:8080;
+    }
+}

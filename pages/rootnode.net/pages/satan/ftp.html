@@ -1,0 +1,87 @@
+<header id="overview" class="jumbotron subhead">
+    <div class="container">
+        <h1>FTP</h1>
+        <p class="lead">FTP accounts</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <div class="span9">
+
+        <section id="ftp">
+          <div class="page-header">
+            <h1>Managing FTP accounts</h1>
+          </div>
+<p class="lead"></p>
+
+	<h3 id="ftp-account">Account</h3>
+	
+	<h4 id="ftp-account-add">Add</h4>
+	<p>Add command takes 3 mandatory arguments: <u>user name</u>, <u>password</u> and <u>directory path</u> and optional privilege arguments. It is a good idea to generate password with <code>apg</code> command or following Perl code.</p>
+
+<pre>
+PASSWORD=$(perl -le 'print map { ("a".."z", 0..9)[rand 36] } 1..12')
+satan ftp <b>add</b> <span class="change">example</span> $PASSWORD <span class="change">~/web/example.net/htdocs</span> <b>nodelete nomkdir</b></span>
+</pre>
+	<p>All privileges are enabled by default. You can disable privileges with following arguments:
+	<ul>
+		<li>nomkdir - forbid directory creation</li>
+		<li>nodelete - forbid file removal</li>
+		<li>noupload - forbid file upload</li>
+		<li>noread - forbid directory read</li>
+		<li>nossl - do not force encrypted connection and data transfer</li>
+	</ul>
+	Privilege argument in <code>satan ftp add</code> command is not mandatory.
+	</p>
+
+	<h4 id="ftp-account-list">List</h4>
+	<p>List command takes no arguments.</p>
+	<pre>satan dns <b>list</b></pre>
+	<p>Results will be similar to the following:</p>
+<pre>
+FTP accounts (1 in total)
+
+User name   Directory                               mkdir   delete   upload   read   ssl   Created at            Updated at            
+example     /home/tester/web/example.net/htdocs     yes     yes      yes      yes    yes   2012-10-07 09:51:50   2012-10-07 09:51:50   
+</pre>
+	
+	<h4 id="ftp-account-delete">Delete</h4>
+	<p>Delete command takes 1 argument: <u>user name</u>.</p>
+	<pre>satan ftp <b>del</b> <span class="change">example</span></pre>
+	<p><span class="label label-warning">Notice</span> FTP account files will NOT be deleted after account removal.</p>
+        </section>
+        <section id="client">
+          <div class="page-header">
+            <h1>Client configuration</h1>
+          </div>
+	<p>Connection port is <code>$UID</code>1. For $UID = 1234 it would be 12341.</p>
+	
+
+	</section>
+
+        </div>
+        <div class="span3 bs-docs-sidebar">
+            <ul class="nav nav-list bs-docs-sidenav">
+                <li>
+                    <a href="#ftp-management">
+                        <i class="icon-chevron-left"></i>
+                        Managing FTP accounts
+                    </a>
+                </li>
+                <li>
+                    <a href="#ftp-account">
+                        <i class="icon-chevron-left"></i>
+                        Account
+                    </a>
+                </li>
+                <li>
+                    <a href="#client">
+                        <i class="icon-chevron-left"></i>
+                        Client configuration
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

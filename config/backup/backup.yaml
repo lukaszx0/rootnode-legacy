@@ -1,0 +1,24 @@
+# Backup servers configuration
+# 
+# Syntax:
+# <backup_server>:
+# system: [ <client_server>, ... ]
+# users : [ <client_server>, ... ]
+
+# server list:
+# lyon, wall, esr, farmer, stallman(X), stallman2, korn, torvalds(X), 
+# cox, allison, draper(X), bernstein, t1, t2, t3, t4
+
+bernstein: 
+  system: [ stallman2, korn, venema ]
+  users:  [ stallman2, korn, venema ]
+
+lyon:
+  system: [ allison, wall ]
+  users:  [ wall ]
+  mysql:  [ allison ]
+
+allison:
+  system: [ lyon, esr, farmer, stallman2, korn, cox, bernstein ]
+  users:  [ lyon, cox ]
+  mysql:  [ allison, lyon, wall, esr ]
